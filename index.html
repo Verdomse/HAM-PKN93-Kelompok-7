@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hak Asasi Manusia di NKRI — PKN93 Filsafat UGM</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --crimson: #c0392b;
+    --crimson-light: #e74c3c;
+    --gold: #d4a84b;
+    --text: #e8e0d5;
+    --muted: #8a8278;
+    --border: #2a2a2a;
+    --white: #f5f0eb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    font-family: 'IBM Plex Sans', sans-serif;
+    overflow: hidden;
+    color: var(--text);
+  }
+
+  /* ── DECK WRAPPER ── */
+  #deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── SLIDES ── */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .slide.active {
+    opacity: 1; transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit {
+    opacity: 0; transform: translateX(-60px);
+  }
+
+  /* ── NAV BAR ── */
+  #nav {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+    background: rgba(10,10,10,.85);
+    border: 1px solid var(--border);
+    padding: 10px 24px;
+    border-radius: 50px;
+    backdrop-filter: blur(12px);
+  }
+  #nav button {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 18px;
+    transition: color .2s;
+    padding: 4px 8px;
+    font-family: inherit;
+  }
+  #nav button:hover { color: var(--crimson-light); }
+  #nav button.disabled { opacity: .3; cursor: default; }
+  #slide-counter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── PROGRESS ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px;
+    background: var(--crimson);
+    transition: width .4s ease;
+    z-index: 200;
+    box-shadow: 0 0 10px var(--crimson);
+  }
+
+  /* ── DECORATIVE ── */
+  .slide-number-bg {
+    position: absolute;
+    right: -20px; bottom: -40px;
+    font-family: 'Playfair Display', serif;
+    font-size: 300px;
+    font-weight: 900;
+    color: rgba(255,255,255,.018);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 12px;
+  }
+  .label.gold { color: var(--gold); }
+  .label.muted { color: var(--muted); }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 5.5vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 3.5vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.2vw, 28px);
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: clamp(14px, 1.4vw, 17px);
+    line-height: 1.75;
+    color: #c5bdb4;
+    margin-bottom: 14px;
+    max-width: 820px;
+  }
+  p strong { color: var(--white); }
+  p em { color: var(--crimson-light); font-style: normal; font-weight: 600; }
+
+  .divider {
+    width: 60px; height: 3px;
+    background: var(--crimson);
+    margin-bottom: 28px;
+  }
+  .divider.gold { background: var(--gold); }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 22px 24px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--crimson);
+  }
+  .card.gold::before { background: var(--gold); }
+  .card.dim::before { background: var(--muted); }
+  .card .card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 8px;
+  }
+  .card.gold .card-title { color: var(--gold); }
+  .card .card-body {
+    font-size: clamp(12px, 1.25vw, 15px);
+    line-height: 1.6;
+    color: #b0a89f;
+  }
+  .card .card-body strong { color: var(--white); font-weight: 600; }
+  .card .stat {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3.5vw, 52px);
+    font-weight: 900;
+    color: var(--crimson-light);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .card .stat.gold { color: var(--gold); }
+
+  /* ── TIMELINE ── */
+  .timeline { list-style: none; position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--crimson), transparent);
+  }
+  .timeline li {
+    position: relative;
+    margin-bottom: 18px;
+    padding-left: 16px;
+  }
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: -20px; top: 7px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--crimson);
+    border: 2px solid var(--bg);
+  }
+  .timeline .tl-year {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--crimson);
+    letter-spacing: .15em;
+  }
+  .timeline .tl-text {
+    font-size: clamp(12px, 1.2vw, 15px);
+    color: #b0a89f;
+    line-height: 1.55;
+    margin-top: 2px;
+  }
+  .timeline .tl-text strong { color: var(--white); }
+
+  /* ── QUOTE ── */
+  .blockquote {
+    border-left: 4px solid var(--crimson);
+    padding: 16px 24px;
+    background: rgba(192,57,43,.07);
+    margin: 12px 0;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(14px, 1.5vw, 19px);
+    color: #d0c8bf;
+    line-height: 1.6;
+  }
+  .blockquote cite {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: .1em;
+  }
+
+  /* ── TAG PILL ── */
+  .pill {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin: 3px;
+    letter-spacing: .1em;
+  }
+  .pill.red { background: rgba(192,57,43,.2); color: var(--crimson-light); border: 1px solid rgba(192,57,43,.3); }
+  .pill.gold { background: rgba(212,168,75,.15); color: var(--gold); border: 1px solid rgba(212,168,75,.25); }
+  .pill.muted { background: rgba(138,130,120,.12); color: var(--muted); border: 1px solid rgba(138,130,120,.2); }
+
+  /* ── PERSON CARD ── */
+  .person-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .person-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(192,57,43,.2);
+    border: 2px solid var(--crimson);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .person-info .name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 1.6vw, 20px);
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .person-info .role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--crimson);
+    letter-spacing: .12em;
+    margin-bottom: 8px;
+  }
+  .person-info p { margin: 0; font-size: clamp(12px, 1.2vw, 14px); }
+
+  /* ── COVER SPECIFIC ── */
+  .slide-cover {
+    justify-content: center;
+    background: radial-gradient(ellipse at 30% 50%, rgba(192,57,43,.12) 0%, transparent 65%),
+                radial-gradient(ellipse at 80% 20%, rgba(212,168,75,.06) 0%, transparent 50%),
+                var(--bg);
+  }
+  .slide-cover .cover-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .2em;
+    margin-top: 36px;
+  }
+  .slide-cover .cover-meta span { color: var(--gold); }
+  .cover-flag {
+    font-size: 52px;
+    margin-bottom: 20px;
+  }
+  .cover-underline {
+    display: inline-block;
+    position: relative;
+  }
+  .cover-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 0; right: 0;
+    height: 4px;
+    background: var(--crimson);
+  }
+
+  /* ── LAYOUT HELPERS ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 4px;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+    margin-top: 8px;
+  }
+
+  /* ── ALERT BOX ── */
+  .alert {
+    background: rgba(192,57,43,.1);
+    border: 1px solid rgba(192,57,43,.35);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 12px 0;
+  }
+  .alert .alert-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    color: var(--crimson-light);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .alert p { margin: 0; font-size: clamp(12px,1.2vw,15px); color: #c5bdb4; }
+
+  /* ── MISSING PERSON GRID ── */
+  .missing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .missing-person {
+    background: rgba(192,57,43,.08);
+    border: 1px solid rgba(192,57,43,.2);
+    padding: 10px;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .missing-person .mp-icon { font-size: 22px; margin-bottom: 6px; }
+  .missing-person .mp-name {
+    font-size: 11px;
+    color: var(--crimson-light);
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.4;
+  }
+  .missing-person .mp-org {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.3;
+  }
+
+  /* ── SLIDE-SPECIFIC BACKGROUNDS ── */
+  .bg-red-tint {
+    background: radial-gradient(ellipse at 70% 30%, rgba(192,57,43,.1) 0%, transparent 60%), var(--bg);
+  }
+  .bg-gold-tint {
+    background: radial-gradient(ellipse at 20% 70%, rgba(212,168,75,.07) 0%, transparent 55%), var(--bg);
+  }
+
+  /* scroll for long slides */
+  .slide-scrollable .slide-content {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .slide-scrollable .slide-content::-webkit-scrollbar { width: 5px; }
+  .slide-scrollable .slide-content::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* ── KEY FIGURE ── */
+  .key-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 6px 0 14px;
+  }
+  .key-figure .num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 5vw, 70px);
+    font-weight: 900;
+    color: var(--crimson-light);
+    line-height: 1;
+  }
+  .key-figure .unit {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion-point {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .conclusion-point .bullet {
+    width: 28px; height: 28px;
+    background: var(--crimson);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: white;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .conclusion-point .content h3 { margin-bottom: 4px; font-size: clamp(14px,1.5vw,18px); }
+  .conclusion-point .content p { margin: 0; font-size: clamp(12px,1.2vw,15px); }
+
+  .final-stamp {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px,2vw,28px);
+    font-weight: 700;
+    color: var(--crimson-light);
+    border: 3px solid var(--crimson);
+    display: inline-block;
+    padding: 10px 24px;
+    transform: rotate(-2deg);
+    margin-top: 8px;
+    opacity: .85;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="deck">
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 1 — COVER
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide slide-cover active" data-index="0">
+    <div class="cover-flag">🇮🇩</div>
+    <div class="label">Mata Kuliah Pendidikan Kewarganegaraan · PKN93</div>
+    <h1><span class="cover-underline">Hak Asasi Manusia</span><br>di NKRI</h1>
+    <div class="divider"></div>
+    <p style="max-width:620px; font-size: clamp(15px,1.5vw,19px);">
+      Dari fondasi konstitusional hingga pelanggaran sistematis —<br>
+      sebuah telaah kritis atas janji dan kenyataan penegakan HAM di Indonesia.
+    </p>
+    <div class="cover-meta">
+      Kelompok PKN93 &nbsp;·&nbsp; <span>Fakultas Filsafat UGM</span> &nbsp;·&nbsp; <span>2026</span>
+    </div>
+    <div class="slide-number-bg">1</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 2 — APA ITU HAM?
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="1">
+    <div class="label">Bagian I — Konsep Dasar</div>
+    <h2>Apa Itu Hak Asasi Manusia?</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <p>
+          Hak Asasi Manusia (<strong>HAM</strong>) adalah hak yang melekat pada hakikat dan keberadaan manusia sebagai makhluk Tuhan Yang Maha Esa. HAM merupakan <em>anugerah yang wajib dihormati, dijunjung tinggi, dan dilindungi</em> oleh negara, hukum, pemerintah, dan setiap orang.
+        </p>
+        <p>
+          HAM bersifat <strong>universal</strong> — berlaku bagi semua manusia tanpa membedakan ras, suku, agama, jenis kelamin, atau kewarganegaraan. HAM juga <strong>tidak dapat dicabut</strong> (inalienable) dan <strong>tidak dapat dibagi-bagi</strong> (indivisible).
+        </p>
+        <div class="blockquote">
+          "Semua orang dilahirkan merdeka dan mempunyai martabat dan hak-hak yang sama."
+          <cite>— Deklarasi Universal HAM PBB, Pasal 1 (1948)</cite>
+        </div>
+      </div>
+      <div>
+        <h3>Kategori HAM</h3>
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">Hak Sipil & Politik</div>
+          <div class="card-body">Hak hidup, bebas dari penyiksaan, kebebasan berpikir, hak memilih, hak atas peradilan yang adil.</div>
+        </div>
+        <div class="card gold" style="margin-bottom:12px">
+          <div class="card-title">Hak Ekonomi, Sosial & Budaya</div>
+          <div class="card-body">Hak atas pekerjaan, pendidikan, kesehatan, standar hidup layak, dan berpartisipasi dalam budaya.</div>
+        </div>
+        <div class="card dim">
+          <div class="card-title">Hak Kolektif</div>
+          <div class="card-body">Hak pembangunan, hak atas lingkungan hidup yang baik, hak penentuan nasib sendiri (self-determination).</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">2</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 3 — HAM DI NKRI: LANDASAN HUKUM
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="2">
+    <div class="label">Bagian I — Konsep Dasar</div>
+    <h2>HAM di NKRI: Landasan Hukum & Institusi</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <h3>Dasar Konstitusional</h3>
+        <ul style="list-style:none; margin-bottom:18px;">
+          <li style="display:flex; gap:12px; margin-bottom:10px; align-items:start;">
+            <span class="pill red">UUD 1945</span>
+            <span style="font-size:14px; color:#b0a89f;">Pasal 27–34 mengatur HAM. Amandemen II (2000) memperkuat dengan Pasal 28A–28J yang komprehensif.</span>
+          </li>
+          <li style="display:flex; gap:12px; margin-bottom:10px; align-items:start;">
+            <span class="pill gold">UU 39/1999</span>
+            <span style="font-size:14px; color:#b0a89f;">Undang-Undang tentang Hak Asasi Manusia — dasar hukum perlindungan HAM secara menyeluruh.</span>
+          </li>
+          <li style="display:flex; gap:12px; margin-bottom:10px; align-items:start;">
+            <span class="pill red">UU 26/2000</span>
+            <span style="font-size:14px; color:#b0a89f;">Undang-Undang tentang Pengadilan HAM — landasan penuntutan pelanggaran HAM berat.</span>
+          </li>
+          <li style="display:flex; gap:12px; align-items:start;">
+            <span class="pill muted">Keppres 50/1993</span>
+            <span style="font-size:14px; color:#b0a89f;">Pembentukan Komnas HAM — lembaga independen pengawas perlindungan HAM di Indonesia.</span>
+          </li>
+        </ul>
+        <div class="alert">
+          <div class="alert-title">⚠️ Pelanggaran HAM Berat (UU 26/2000)</div>
+          <p>Mencakup <strong>genosida</strong> dan <strong>kejahatan terhadap kemanusiaan</strong> seperti pembunuhan massal, perbudakan, penyiksaan, dan penghilangan paksa.</p>
+        </div>
+      </div>
+      <div>
+        <h3>Institusi Penegak HAM</h3>
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-title">Komnas HAM</div>
+          <div class="card-body">Komisi Nasional Hak Asasi Manusia — bertugas melakukan penyelidikan kasus pelanggaran HAM berat dan menyerahkan hasilnya ke Kejaksaan Agung.</div>
+        </div>
+        <div class="card gold" style="margin-bottom:10px">
+          <div class="card-title">Pengadilan HAM</div>
+          <div class="card-body">Dibentuk berdasarkan UU 26/2000. Pengadilan HAM Ad Hoc untuk kasus masa lalu. Bertugas memeriksa dan memutus kasus pelanggaran HAM berat.</div>
+        </div>
+        <div class="card dim" style="margin-bottom:10px">
+          <div class="card-title">KontraS</div>
+          <div class="card-body">Komisi untuk Orang Hilang dan Korban Tindak Kekerasan — LSM berpengaruh yang mendokumentasikan dan mengadvokasi kasus HAM.</div>
+        </div>
+        <div class="card dim">
+          <div class="card-title">YLBHI & LBH</div>
+          <div class="card-body">Yayasan Lembaga Bantuan Hukum Indonesia — memberikan bantuan hukum kepada korban pelanggaran HAM sejak era Orde Baru.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">3</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 4 — GAMBARAN UMUM PELANGGARAN HAM
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-red-tint" data-index="3">
+    <div class="label gold">Bagian II — Pelanggaran HAM di NKRI</div>
+    <h2>Gambaran Umum: Warisan Kelam Negara</h2>
+    <div class="divider gold"></div>
+    <div class="card-grid cols-4" style="margin-bottom:24px">
+      <div class="card">
+        <div class="stat">11</div>
+        <div class="card-title">Kasus HAM Berat</div>
+        <div class="card-body">Kasus pelanggaran HAM berat yang belum tuntas per Laporan Komnas HAM 2019, masih tertahan di antara Komnas HAM & Kejagung.</div>
+      </div>
+      <div class="card">
+        <div class="stat">13</div>
+        <div class="card-title">Aktivis Hilang</div>
+        <div class="card-body">Aktivis yang diculik pada 1997–1998 dan <strong>masih belum ditemukan</strong> keberadaannya hingga hari ini.</div>
+      </div>
+      <div class="card">
+        <div class="stat">32</div>
+        <div class="card-title">Tahun Orde Baru</div>
+        <div class="card-body">Rezim Soeharto berkuasa selama 32 tahun (1966–1998) dengan represif terhadap kebebasan sipil dan HAM.</div>
+      </div>
+      <div class="card gold">
+        <div class="stat" style="color:var(--gold)">0</div>
+        <div class="card-title">Penuntutan Tuntas</div>
+        <div class="card-body">Tidak ada satu pun kasus pelanggaran HAM berat masa lalu yang berhasil dituntaskan melalui mekanisme hukum formal.</div>
+      </div>
+    </div>
+    <p style="margin-bottom:16px;"><strong>Daftar Kasus Pelanggaran HAM Berat yang Diakui Komnas HAM:</strong></p>
+    <div class="card-grid cols-3">
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Peristiwa 1965–1966 (PKI)</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Peristiwa Talangsari 1989</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Tanjung Priok 1984</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Penghilangan Paksa 1997–1998</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Kerusuhan Mei 1998</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Trisakti & Semanggi I & II</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Dukun Santet Banyuwangi 1998</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Konflik Aceh (DOM)</div>
+      <div class="pill red" style="padding:8px 14px; display:block; text-align:left; margin:0">📍 Papua (Wasior, Wamena)</div>
+    </div>
+    <div class="slide-number-bg">4</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 5 — PERISTIWA TANJUNG PRIOK 1984
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="4">
+    <div class="label gold">Bagian II — Kasus per Kasus</div>
+    <h2>Tragedi Tanjung Priok (1984)</h2>
+    <div class="divider gold"></div>
+    <div class="two-col">
+      <div>
+        <p>Pada <strong>12 September 1984</strong>, aparat militer melakukan penembakan terhadap warga Muslim yang berunjuk rasa di kawasan pelabuhan Tanjung Priok, Jakarta. Massa yang awalnya protes atas tindakan anggota Babinsa yang memasuki masjid dengan sepatu dan menyiram pengumuman masjid dengan air comberan, akhirnya berkonfrontasi dengan militer.</p>
+        <div class="alert">
+          <div class="alert-title">Data Korban</div>
+          <p><strong>24 orang tewas · 36 luka berat · 19 luka ringan</strong><br>
+          Angka riil diperkirakan lebih tinggi. Jenazah diduga dikuburkan secara massal.</p>
+        </div>
+        <p>Komnas HAM kemudian menyelidiki kasus ini dan menemukan indikasi pelanggaran HAM berat. Namun dalam persidangan, <em>14 terdakwa seluruhnya dinyatakan bebas</em> oleh majelis hakim.</p>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">Konteks Politik</div>
+          <div class="card-body">Terjadi di masa Orde Baru saat kebijakan Asas Tunggal Pancasila memaksa semua ormas termasuk Islam untuk tunduk. Protes dianggap ancaman terhadap rezim.</div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="card-title">Status Hukum</div>
+          <div class="card-body">Meski Komnas HAM merekomendasikan pembentukan Pengadilan HAM Ad Hoc, Kejaksaan Agung tidak menindaklanjuti. Kasus tetap mengambang.</div>
+        </div>
+        <div class="blockquote" style="margin-top:16px;">
+          Peristiwa Tanjung Priok menjadi preseden bagi impunitas militer — sebuah pola yang akan berulang di kasus-kasus berikutnya.
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">5</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 6 — PERISTIWA 27 JULI 1996
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="5">
+    <div class="label gold">Bagian II — Kasus per Kasus</div>
+    <h2>Penyerbuan Kantor PDI (27 Juli 1996)</h2>
+    <div class="divider gold"></div>
+    <div class="two-col">
+      <div>
+        <p>
+          Pada <strong>27 Juli 1996</strong>, kelompok pendukung Soerjadi — yang diangkat sebagai Ketua PDI versi pemerintah — bersama aparat menyerbu kantor DPP PDI di Jakarta yang saat itu dikuasai pendukung <strong>Megawati Soekarnoputri</strong>. Kejadian ini kemudian memicu kerusuhan besar di Jakarta.
+        </p>
+        <div class="alert">
+          <div class="alert-title">Data Korban Versi Komnas HAM</div>
+          <p><strong>5 orang tewas · 149 luka-luka · 23 orang hilang</strong></p>
+        </div>
+        <p>
+          Insiden ini merupakan upaya sistematis Orde Baru untuk membungkam oposisi politik. Megawati, yang populer dan dianggap ancaman bagi Soeharto, coba disingkirkan melalui rekayasa politik dan kekerasan.
+        </p>
+      </div>
+      <div>
+        <h3>Dampak & Tindak Lanjut</h3>
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-title">Pengkambinghitaman</div>
+          <div class="card-body">Pasca-insiden, pemerintah menuding <strong>Partai Rakyat Demokratik (PRD)</strong> dan <strong>Solidaritas Mahasiswa Indonesia untuk Demokrasi (SMID)</strong> sebagai dalang, memicu gelombang penangkapan aktivis.</div>
+        </div>
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-title">Putusan Pengadilan</div>
+          <div class="card-body">Empat terdakwa dinyatakan bebas, satu orang divonis ringan hanya 2 bulan 10 hari — jauh dari proporsional mengingat skala kekerasan yang terjadi.</div>
+        </div>
+        <div class="card dim">
+          <div class="card-title">Aksi Kamisan</div>
+          <div class="card-body">Keluarga korban bersama aktivis secara rutin menggelar "Aksi Kamisan" di depan Istana Negara setiap Kamis sebagai bentuk tuntutan keadilan yang berlanjut.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">6</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 7 — TRAGEDI TRISAKTI & KERUSUHAN MEI 1998
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-red-tint" data-index="6">
+    <div class="label gold">Bagian II — Kasus per Kasus</div>
+    <h2>Tragedi Trisakti & Kerusuhan Mei 1998</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <div class="label" style="margin-bottom:8px">12 Mei 1998 — Penembakan Trisakti</div>
+        <p>Mahasiswa Universitas Trisakti menggelar demonstrasi damai menuntut reformasi dan pengunduran diri Soeharto. Ketika hendak kembali ke kampus, aparat membuka tembakan. <em>Empat mahasiswa gugur</em>: Elang Mulia Lesmana, Hery Hartanto, Hafidin Royan, dan Hendriawan Sie.</p>
+        <div class="card-grid cols-2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="stat" style="font-size:38px">4</div>
+            <div class="card-title">Mahasiswa Gugur</div>
+            <div class="card-body">Ditembak saat demonstrasi damai. Hingga kini pelaku tidak pernah diadili secara pidana.</div>
+          </div>
+          <div class="card">
+            <div class="stat" style="font-size:38px">Mei</div>
+            <div class="card-title">Titik Balik</div>
+            <div class="card-body">Tragedi Trisakti memicu kerusuhan besar Mei 1998 dan percepatan jatuhnya rezim Orde Baru.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="label gold" style="margin-bottom:8px">13–15 Mei 1998 — Kerusuhan Massal</div>
+        <p>Selama tiga hari, kerusuhan dahsyat melanda Jakarta dan beberapa kota besar. Kekerasan masif, penjarahan, dan pembakaran terjadi. Yang paling kelam: <em>ratusan perempuan Tionghoa menjadi korban kekerasan seksual</em> dalam apa yang kemudian disebut sebagai kejahatan sistematis.</p>
+        <div class="alert">
+          <div class="alert-title">Skala Tragedi Mei 1998</div>
+          <p>
+            <strong>± 1.188 jiwa tewas</strong> (versi Tim Gabungan Pencari Fakta) — mayoritas terjebak dalam gedung yang dibakar &nbsp;·&nbsp;
+            <strong>Ratusan kasus</strong> kekerasan seksual terhadap perempuan Tionghoa &nbsp;·&nbsp;
+            Ribuan bangunan dibakar dan dirusak di Jakarta, Solo, Medan, Palembang.
+          </p>
+        </div>
+        <p>Kejaksaan Agung menyatakan kasus ini <em>tidak bisa ditindaklanjuti</em> karena tidak ditemukan pelanggaran HAM berat — sebuah kesimpulan yang terus diperdebatkan aktivis dan pakar hukum.</p>
+      </div>
+    </div>
+    <div class="slide-number-bg">7</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 8 — SEMANGGI I & II
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="7">
+    <div class="label gold">Bagian II — Kasus per Kasus</div>
+    <h2>Tragedi Semanggi I & II (1998–1999)</h2>
+    <div class="divider gold"></div>
+    <div class="two-col">
+      <div>
+        <h3>Semanggi I — 13 November 1998</h3>
+        <p>Mahasiswa dari berbagai universitas berdemonstrasi menentang Sidang Istimewa DPR/MPR dan menolak Dwifungsi ABRI. Aparat merespons dengan peluru. <em>17 orang warga sipil tewas</em> (data Tim Relawan untuk Kemanusiaan), ratusan luka-luka terkena tembakan dan benda tumpul.</p>
+        <div class="card" style="margin-bottom: 14px;">
+          <div class="card-title">Korban Semanggi I</div>
+          <div class="card-body"><strong>17 jiwa melayang</strong> · ratusan luka tembak · Berkas penyelidikan Komnas HAM diserahkan ke Kejagung namun sempat dinyatakan <em>hilang</em> pada 13 Maret 2008.</div>
+        </div>
+        <h3>Semanggi II — 24 September 1999</h3>
+        <p>Mahasiswa kembali turun jalan menolak RUU Penanggulangan Keadaan Bahaya (PKB) yang dianggap otoriter. Aparat kembali menembak. <em>11 orang tewas</em> di seluruh Jakarta dan sekitarnya, ±217 orang luka.</p>
+      </div>
+      <div>
+        <div class="card gold" style="margin-bottom:14px">
+          <div class="card-title">Total Korban Semanggi I & II</div>
+          <div class="card-body">
+            <strong>28 jiwa tewas</strong> gabungan dua tragedi &nbsp;·&nbsp; ratusan luka &nbsp;·&nbsp; belum ada pertanggungjawaban pidana dari pihak militer maupun komandan lapangan.
+          </div>
+        </div>
+        <div class="blockquote">
+          "Berkas hasil penyelidikan Komnas HAM sempat dinyatakan <em>hilang</em> pada 13 Maret 2008 oleh Kejaksaan Agung — sebuah kejanggalan yang mempertebal kesan adanya upaya penghilangan bukti."
+          <cite>— Catatan KontraS</cite>
+        </div>
+        <div class="alert">
+          <div class="alert-title">Impunitas Berlanjut</div>
+          <p>DPR membentuk Pansus beberapa kali untuk mengusut, namun rekomendasi tidak pernah ditindaklanjuti. Kejaksaan Agung membutuhkan <strong>rekomendasi dari DPR ke Presiden</strong> untuk melanjutkan — siklus politis yang tidak pernah selesai.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">8</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 9 — STUDI KASUS: PENCULIKAN AKTIVIS 1997–1998
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-red-tint" data-index="8">
+    <div class="label">Bagian III — Studi Kasus Utama</div>
+    <h2>Penculikan & Penghilangan Paksa Aktivis 1997–1998</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <p>
+          Menjelang <strong>Pemilu 1997</strong> dan <strong>Sidang Umum MPR Maret 1998</strong>, rezim Orde Baru melancarkan operasi penghilangan paksa secara sistematis terhadap para aktivis pro-demokrasi. Mereka yang vokal mengkritik pemerintah dianggap sebagai <em>ancaman yang merongrong negara</em> dan harus dilenyapkan.
+        </p>
+        <p>
+          Latar belakang penculikan adalah sikap kritis aktivis terhadap kebijakan pemerintah — gagasan-gagasan mereka dipandang sebagai ancaman nyata bagi keberlangsungan kekuasaan Soeharto.
+        </p>
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">Gelombang Penculikan</div>
+          <div class="card-body">
+            <strong>Gelombang I:</strong> Penculikan aktivis PDI-Megawati saat kampanye 1997<br>
+            <strong>Gelombang II:</strong> Feb–Mei 1998 — 23 aktivis PRD dan SMID diculik<br>
+            <strong>Gelombang III:</strong> Upaya menghilangkan bukti kekerasan terhadap etnis Tionghoa
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card-grid cols-2">
+          <div class="card">
+            <div class="stat">23</div>
+            <div class="card-title">Total Diculik</div>
+            <div class="card-body">Aktivis yang menjadi korban penculikan paksa pada periode 1997–1998.</div>
+          </div>
+          <div class="card">
+            <div class="stat">9</div>
+            <div class="card-title">Dikembalikan</div>
+            <div class="card-body">Sembilan aktivis akhirnya dilepaskan — dalam kondisi mengalami penyiksaan psikologis dan fisik.</div>
+          </div>
+          <div class="card">
+            <div class="stat">1</div>
+            <div class="card-title">Meninggal</div>
+            <div class="card-body">Satu orang meninggal dunia dalam penculikan tersebut.</div>
+          </div>
+          <div class="card" style="border-color: var(--crimson-light);">
+            <div class="stat">13</div>
+            <div class="card-title">Masih Hilang</div>
+            <div class="card-body"><strong style="color:var(--crimson-light)">Tiga belas orang masih belum ditemukan hingga hari ini (2026).</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">9</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 10 — TIM MAWAR & DALANG PENCULIKAN
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="9">
+    <div class="label">Bagian III — Studi Kasus Utama</div>
+    <h2>Tim Mawar: Mesin Penculikan Negara</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <p>
+          Penculikan para aktivis dilakukan oleh <strong>Tim Mawar</strong> — satuan tugas khusus dari Kopassus (Komando Pasukan Khusus) yang berada di bawah komando <strong>Prabowo Subianto</strong>, saat itu menjabat Komandan Kopassus (1995–1998).
+        </p>
+        <p>
+          Pada <strong>2008</strong>, Komnas HAM menetapkan kasus penghilangan orang secara paksa sebagai salah satu dari 12 pelanggaran HAM berat — dengan Tim Mawar pimpinan Prabowo sebagai pelaku utama.
+        </p>
+        <div class="blockquote">
+          "Ironisnya, komandan Tim Mawar, Prabowo, tetap bebas dan kini bahkan menduduki kursi presiden."
+          <cite>— Tempo, Opini HAM 2024</cite>
+        </div>
+      </div>
+      <div>
+        <h3>Pertanggungjawaban (atau Ketiadaannya)</h3>
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-title">Mahkamah Militer Tinggi II Jakarta (April 1999)</div>
+          <div class="card-body">11 anggota Tim Mawar dihukum <strong>12–22 bulan penjara</strong> — hukuman yang dinilai sangat ringan. Kemudian <em>diringankan lagi</em> oleh Mahkamah Militer Agung (Oktober 2000).</div>
+        </div>
+        <div class="card gold" style="margin-bottom:10px">
+          <div class="card-title">Prabowo Subianto</div>
+          <div class="card-body">Hanya diajukan ke <em>Dewan Kehormatan Perwira</em> atas pelanggaran etik. Dipecat dari militer secara terhormat oleh Habibie dan tetap menerima pensiun. <strong>Tidak pernah diadili secara pidana.</strong></div>
+        </div>
+        <div class="card dim">
+          <div class="card-title">Status 2026</div>
+          <div class="card-body">Prabowo Subianto kini menjabat sebagai <strong>Presiden Republik Indonesia</strong> sejak 2024. Kasus penculikan 1998 belum pernah diselesaikan melalui pengadilan pidana.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">10</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 11 — 13 ORANG YANG MASIH HILANG
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-red-tint" data-index="10">
+    <div class="label">Bagian III — Studi Kasus Utama</div>
+    <h2>13 Wajah yang Menunggu Keadilan</h2>
+    <div class="divider"></div>
+    <p>Berikut adalah sebagian nama aktivis yang <em>masih dinyatakan hilang</em> sejak 1997–1998 dan belum pernah ditemukan:</p>
+    <div class="missing-grid" style="margin-top:14px">
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Wiji Thukul</div>
+        <div class="mp-org">JAKER (Jaringan Kerja Kebudayaan Rakyat)</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Petrus Bima Anugrah</div>
+        <div class="mp-org">SMID</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Suyat</div>
+        <div class="mp-org">SMID</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Herman Hendrawan</div>
+        <div class="mp-org">SMID / PRD</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Yani Afri</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Sonny</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Dedy Hamdun</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Noval Al Katiri</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Ismail</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Ucok Munandar</div>
+        <div class="mp-org">PRD</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Hendra Hambali</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Yadin Muhidin</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+      <div class="missing-person">
+        <div class="mp-icon">👤</div>
+        <div class="mp-name">Bimo Petrus</div>
+        <div class="mp-org">Aktivis</div>
+      </div>
+    </div>
+    <div class="alert" style="margin-top:16px">
+      <div class="alert-title">Masih Menunggu — 28 Tahun Kemudian</div>
+      <p>Keluarga korban, bersama IKOHI (Ikatan Keluarga Orang Hilang Indonesia), terus berjuang menuntut negara mengungkap nasib 13 orang ini. Beberapa kali Pansus DPR dibentuk, namun <strong>tidak pernah menghasilkan kejelasan hukum</strong>.</p>
+    </div>
+    <div class="slide-number-bg">11</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 12 — PROFIL MUNIR
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-gold-tint" data-index="11">
+    <div class="label">Bagian III — Studi Kasus Utama</div>
+    <h2>Munir Said Thalib: Pembela yang Tak Pernah Diam</h2>
+    <div class="divider gold"></div>
+    <div class="two-col">
+      <div>
+        <div class="person-card">
+          <div class="person-icon">✊</div>
+          <div class="person-info">
+            <div class="name">Munir Said Thalib</div>
+            <div class="role">Aktivis HAM · Pendiri KontraS & Imparsial</div>
+            <p>Lahir Malang, 8 Desember 1965. Lulus Hukum Universitas Brawijaya 1990. Meninggal 7 September 2004 — diracun di pesawat.</p>
+          </div>
+        </div>
+        <p>
+          Munir adalah sosok paling ikonik dalam gerakan HAM Indonesia. Sebagai <strong>pendiri KontraS</strong>, ia gigih membela aktivis korban penculikan, buruh, dan kelompok tertindas. Ia juga seorang anggota <strong>Lembaga Bantuan Hukum (LBH)</strong> yang aktif dalam aksi-aksi menuntut keadilan.
+        </p>
+        <p>
+          Sebelum kematiannya, Munir aktif mengkritik kebijakan pemerintah, termasuk RUU Badan Intelijen Negara, RUU TNI, dan RUU Komisi Kebenaran dan Rekonsiliasi — semua regulasi yang ia anggap mengancam kebebasan sipil.
+        </p>
+      </div>
+      <div>
+        <h3>Perjuangan Semasa Hidup</h3>
+        <ul class="timeline">
+          <li>
+            <div class="tl-year">1990-AN</div>
+            <div class="tl-text">Aktif di LBH, membela hak buruh dan korban kekerasan negara di era Orde Baru.</div>
+          </li>
+          <li>
+            <div class="tl-year">1998</div>
+            <div class="tl-text">Mendirikan <strong>KontraS</strong> untuk mendokumentasikan dan mengadvokasi kasus orang hilang & korban kekerasan.</div>
+          </li>
+          <li>
+            <div class="tl-year">2000</div>
+            <div class="tl-text">Menjadi pembela bagi para aktivis korban penculikan Tim Mawar, termasuk menemani keluarga korban berjuang di pengadilan.</div>
+          </li>
+          <li>
+            <div class="tl-year">2002</div>
+            <div class="tl-text">Mendirikan <strong>Imparsial</strong> (Indonesian Human Rights Monitor) untuk pemantauan HAM berbasis riset.</div>
+          </li>
+          <li>
+            <div class="tl-year">2004</div>
+            <div class="tl-text">Bersiap melanjutkan studi S2 di Universitas Utrecht, Belanda. <strong>6 September 2004</strong> — terbang untuk terakhir kalinya.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number-bg">12</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 13 — KRONOLOGI KEMATIAN MUNIR
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="12">
+    <div class="label">Bagian III — Studi Kasus Utama</div>
+    <h2>Malam Terakhir di Udara: Kronologi Kematian Munir</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <ul class="timeline">
+          <li>
+            <div class="tl-year">6 Sept 2004 · 21:55 WIB</div>
+            <div class="tl-text">Pesawat <strong>Garuda Indonesia GA-974</strong> lepas landas dari Bandara Soekarno-Hatta menuju Amsterdam. Munir duduk di kursi ekonomi 40G.</div>
+          </li>
+          <li>
+            <div class="tl-year">Transit Singapura</div>
+            <div class="tl-text">Saat transit di Bandara Changi, Munir diduga bertemu pilot Garuda <strong>Pollycarpus Budihari Priyanto</strong> (yang sebenarnya sedang hari libur). Mereka duduk bersama di Coffee Bean Bandara. Racun diduga diberikan di sini.</div>
+          </li>
+          <li>
+            <div class="tl-year">01:50 WIB</div>
+            <div class="tl-text">Pesawat lepas landas dari Changi. Tiga jam kemudian, Munir mulai merasa sakit perut parah dan berulang kali ke toilet.</div>
+          </li>
+          <li>
+            <div class="tl-year">Pindah Kursi</div>
+            <div class="tl-text">Munir dipindahkan ke kursi 1J, di samping dokter yang kebetulan ada di pesawat. Dirawat darurat namun kondisi memburuk.</div>
+          </li>
+          <li>
+            <div class="tl-year">7 Sept · 08:10 Waktu Setempat</div>
+            <div class="tl-text">Munir <strong>meninggal dunia</strong> saat pesawat berada di ketinggian 40.000 kaki di atas tanah Rumania — sebelum sempat mendarat di Amsterdam.</div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3>Fakta Forensik</h3>
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">Temuan Institut Forensik Belanda (NFI)</div>
+          <div class="card-body">Dua bulan setelah kematian, NFI mengungkap <strong>kadar arsenik fatal</strong> di tubuh Munir: ditemukan di air seni, darah, dan jantung. Kadar arsenik di lambung mencapai <strong>460 mg/l</strong> — mendekati dosis fatal untuk orang dewasa.</div>
+        </div>
+        <div class="card gold" style="margin-bottom:12px">
+          <div class="card-title">Temuan Puslabfor Mabes Polri</div>
+          <div class="card-body">Diperkuat oleh Pusat Laboratorium Forensik Polri yang juga menyatakan Munir <strong>tewas karena diracun</strong>.</div>
+        </div>
+        <div class="alert">
+          <div class="alert-title">Pola Pembunuhan Sistematis</div>
+          <p>Menurut KontraS, pembunuhan Munir <strong>dilakukan secara sistematis</strong> dan ditujukan langsung terhadap penduduk sipil — melibatkan berbagai pihak berkedudukan tinggi termasuk oknum Garuda Indonesia dan Badan Intelijen Negara (BIN).</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">13</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 14 — SIAPA DI BALIK KEMATIAN MUNIR?
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-red-tint" data-index="13">
+    <div class="label">Bagian III — Studi Kasus Utama</div>
+    <h2>Siapa di Balik Kematian Munir?</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <h3>Pelaku yang Dipidana</h3>
+        <div class="person-card" style="margin-bottom:12px">
+          <div class="person-icon" style="font-size:18px">🧑‍✈️</div>
+          <div class="person-info">
+            <div class="name">Pollycarpus Budihari Priyanto</div>
+            <div class="role">Pilot Garuda Indonesia · Diduga Anggota BIN</div>
+            <p>Ditetapkan tersangka 18 Maret 2005. Divonis 14 tahun penjara (Desember 2005). Bebas bersyarat November 2014. Bebas murni Agustus 2018. Meninggal 2020 karena Covid-19 — <em>sambil menyangkal keterlibatannya hingga akhir hayat.</em></p>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-icon" style="font-size:18px">🧑‍💼</div>
+          <div class="person-info">
+            <div class="name">Indra Setiawan</div>
+            <div class="role">Mantan Dirut PT Garuda Indonesia</div>
+            <p>Divonis 1 tahun penjara karena menerbitkan surat tugas palsu untuk Pollycarpus agar bisa ikut dalam penerbangan Munir.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Aktor yang Lolos</h3>
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">Muchdi Purwoprandjono (Muchdi PR)</div>
+          <div class="card-body">Mantan Deputi V BIN. Tim Pencari Fakta (TPF) menemukan rekaman komunikasi antara Pollycarpus dan Muchdi PR sebelum dan sesudah pembunuhan. Pollycarpus disebut menerima instruksi dari BIN. Namun <strong>Muchdi dinyatakan bebas</strong> oleh pengadilan.</div>
+        </div>
+        <div class="card dim" style="margin-bottom:12px">
+          <div class="card-title">Aktor Intelektual — Masih Misteri</div>
+          <div class="card-body">TPF Munir (dibentuk Presiden SBY, 2004) menyimpulkan ada <em>konspirasi kejahatan</em> yang melibatkan petinggi BIN dan Garuda. Namun dokumen TPF <strong>hilang</strong> dan tidak pernah dipublikasikan oleh pemerintah Jokowi meski sudah dijanjikan.</div>
+        </div>
+        <div class="alert">
+          <div class="alert-title">20 Tahun Belum Tuntas (2024)</div>
+          <p>Amnesty International menyebut hingga 7 September 2024, <strong>21 tahun setelah kematian Munir</strong>, tidak ada aktor utama yang tersentuh hukum. Kasus Munir bahkan terancam <em>kedaluwarsa</em> sebagai kasus pelanggaran HAM berat.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">14</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 15 — POLA IMPUNITAS: MENGAPA TIDAK PERNAH TUNTAS?
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="14">
+    <div class="label">Bagian IV — Analisis</div>
+    <h2>Pola Impunitas: Mengapa Tidak Pernah Tuntas?</h2>
+    <div class="divider"></div>
+    <div class="three-col">
+      <div>
+        <div class="card" style="height:100%">
+          <div class="card-title">⚖️ Sumbatan Prosedural</div>
+          <div class="card-body" style="font-size:14px">
+            <strong>Siklus ping-pong</strong> antara Komnas HAM dan Kejaksaan Agung. Kejagung terus mengembalikan berkas dengan alasan "tidak lengkap", sementara Komnas HAM tidak memiliki kewenangan penyidikan. Tanpa rekomendasi DPR ke Presiden, Kejagung tidak bergerak.<br><br>
+            UU 26/2000 tentang Pengadilan HAM memiliki <strong>celah struktural</strong> yang memungkinkan penundaan tanpa batas.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card gold" style="height:100%">
+          <div class="card-title">🏛️ Hambatan Politik</div>
+          <div class="card-body" style="font-size:14px">
+            Banyak pelaku pelanggaran HAM masa Orde Baru masih <strong>memiliki pengaruh politik besar</strong> di era reformasi. Prabowo Subianto, misalnya, berhasil mencapai puncak kekuasaan (Presiden 2024) tanpa pernah diadili secara pidana.<br><br>
+            Dokumen TPF Munir <strong>hilang</strong> dan tidak pernah dipublikasikan. Ini bukan kebetulan — ini adalah <em>penghilangan bukti yang difasilitasi negara</em>.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card dim" style="height:100%">
+          <div class="card-title">🔇 Pelemahan Sistematis</div>
+          <div class="card-body" style="font-size:14px">
+            Aktivis yang meneruskan perjuangan Munir terus mendapat tekanan. Acara peringatan kematian Munir kerap dipersulit. Anggaran dan kapasitas Komnas HAM dibatasi.<br><br>
+            Pendekatan "non-yudisial" melalui Komisi Kebenaran dan Rekonsiliasi (KKR) yang terus dikampanyekan pemerintah dianggap banyak pihak sebagai upaya <em>pengampunan tanpa kebenaran</em>.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="blockquote" style="margin-top:20px">
+      "Suatu negara yang tidak mampu melaksanakan upaya peninjauan, penghormatan, dan penegakan HAM akan kehilangan kepercayaan rakyatnya dan konsekuensinya di forum internasional."
+      <cite>— Wawasan Kebangsaan, Komnas HAM</cite>
+    </div>
+    <div class="slide-number-bg">15</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 16 — INDONESIA & INDEKS HAM GLOBAL
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-gold-tint" data-index="15">
+    <div class="label">Bagian IV — Analisis</div>
+    <h2>Indonesia di Mata Dunia: Rapor HAM</h2>
+    <div class="divider gold"></div>
+    <div class="two-col">
+      <div>
+        <p>
+          Meskipun Indonesia secara formal telah meratifikasi berbagai instrumen HAM internasional, penegakan di lapangan masih jauh dari standar yang dijanjikan. Berbagai lembaga internasional secara konsisten mencatat kelemahan Indonesia dalam menghormati HAM.
+        </p>
+        <div class="card gold" style="margin-bottom:12px">
+          <div class="card-title">Amnesty International</div>
+          <div class="card-body">Secara rutin melaporkan kelemahan Indonesia dalam mengadili pelanggaran HAM berat masa lalu dan adanya pembatasan kebebasan berekspresi di Papua dan daerah lain.</div>
+        </div>
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">Human Rights Watch</div>
+          <div class="card-body">Mendokumentasikan impunitas aparat, kekerasan terhadap jurnalis, dan kriminalisasi aktivis menggunakan UU ITE dan pasal-pasal karet.</div>
+        </div>
+        <div class="card dim">
+          <div class="card-title">Komite HAM PBB (ICCPR)</div>
+          <div class="card-body">Indonesia berulang kali mendapat catatan merah atas kegagalan menyelesaikan kasus penghilangan paksa dan meminta pertanggungjawaban pelaku pelanggaran HAM berat masa lalu.</div>
+        </div>
+      </div>
+      <div>
+        <h3>Tren yang Mengkhawatirkan</h3>
+        <ul class="timeline">
+          <li>
+            <div class="tl-year">UU ITE (2008 & Revisi 2021)</div>
+            <div class="tl-text">Digunakan untuk <strong>menjerat aktivis, jurnalis, dan pengkritik pemerintah</strong>. Indonesia menjadi salah satu negara dengan kasus UU ITE terbanyak di Asia.</div>
+          </li>
+          <li>
+            <div class="tl-year">Papua</div>
+            <div class="tl-text">Peristiwa Wasior (2001), Wamena (2003), dan berbagai insiden di Papua masih belum diselesaikan. Akses media ke Papua sangat dibatasi.</div>
+          </li>
+          <li>
+            <div class="tl-year">Kriminalisasi Aktivis</div>
+            <div class="tl-text">Aktivis lingkungan, pembela HAM, dan pengkritik pembangunan proyek strategis nasional (PSN) kerap dihadapkan pada jeratan hukum.</div>
+          </li>
+          <li>
+            <div class="tl-year">2024 — Era Prabowo</div>
+            <div class="tl-text">Kekhawatiran muncul bahwa agenda penuntasan HAM masa lalu akan semakin jauh mengingat Presiden sendiri adalah figur yang belum dibersihkan dari tuduhan pelanggaran HAM 1998.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-number-bg">16</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 17 — AKSI KAMISAN: SUARA YANG TAK PERNAH PADAM
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide" data-index="16">
+    <div class="label">Bagian IV — Perlawanan & Harapan</div>
+    <h2>Aksi Kamisan: Menolak Lupa</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <p>
+          Sejak <strong>18 Januari 2007</strong>, setiap Kamis sore, sejumlah orang berbaju hitam berdiri diam di depan Istana Merdeka, Jakarta. Mereka membawa foto orang-orang yang hilang, terbunuh, atau menjadi korban pelanggaran HAM. Itulah <strong>Aksi Kamisan</strong>.
+        </p>
+        <p>
+          Digagas oleh keluarga korban pelanggaran HAM, terutama ibu-ibu dari <strong>IKOHI</strong> dan aktivis HAM, Aksi Kamisan kini telah berlangsung ratusan kali selama hampir dua dekade — menjadi simbol keteguhan dalam menuntut keadilan.
+        </p>
+        <div class="blockquote">
+          "Kami tidak di sini untuk mengungkap luka lama. Kami di sini untuk memastikan bahwa luka itu tidak boleh dilupakan, sampai ada keadilan."
+          <cite>— Usman Hamid, Amnesty International Indonesia</cite>
+        </div>
+      </div>
+      <div>
+        <h3>Seruan yang Terus Bergema</h3>
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-title">Tuntutan Utama Aksi Kamisan</div>
+          <div class="card-body">
+            1. Bentuk Pengadilan HAM Ad Hoc untuk kasus pelanggaran HAM berat masa lalu<br>
+            2. Ungkap nasib 13 aktivis yang masih hilang sejak 1998<br>
+            3. Usut tuntas kasus pembunuhan Munir Said Thalib<br>
+            4. Pulihkan hak korban dan keluarga korban
+          </div>
+        </div>
+        <div class="card dim">
+          <div class="card-title">Penyebaran ke Seluruh Indonesia</div>
+          <div class="card-body">Aksi serupa kini hadir di berbagai kota: Yogyakarta, Surabaya, Semarang, Medan, Makassar — sebagai bentuk solidaritas nasional untuk korban pelanggaran HAM.</div>
+        </div>
+        <div class="pill red" style="margin-top:12px; font-size:12px; padding:8px 14px;">Aksi Kamisan ke-700+ · Masih berlanjut hingga hari ini</div>
+      </div>
+    </div>
+    <div class="slide-number-bg">17</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 18 — KESIMPULAN
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide bg-red-tint" data-index="17">
+    <div class="label">Penutup — Kesimpulan</div>
+    <h2>Kesimpulan: Indonesia & Tantangan HAM</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <div class="conclusion-point">
+          <div class="bullet">1</div>
+          <div class="content">
+            <h3>Kesenjangan Antara Teks dan Realita</h3>
+            <p>Indonesia memiliki fondasi hukum HAM yang kuat (UUD 1945, UU 39/1999, UU 26/2000), namun penegakannya jauh dari sempurna. Norma ada; kehendak politik untuk melaksanakannya, tidak.</p>
+          </div>
+        </div>
+        <div class="conclusion-point">
+          <div class="bullet">2</div>
+          <div class="content">
+            <h3>Impunitas Sistematis</h3>
+            <p>Tidak satu pun kasus pelanggaran HAM berat masa lalu yang berhasil dituntaskan secara hukum. Para pelaku — bahkan yang sudah diidentifikasi — bebas dari pertanggungjawaban pidana.</p>
+          </div>
+        </div>
+        <div class="conclusion-point">
+          <div class="bullet">3</div>
+          <div class="content">
+            <h3>Paradoks Demokrasi Reformasi</h3>
+            <p>Reformasi 1998 yang diraih dengan darah aktivis justru melahirkan sistem di mana para pelaku pelanggaran HAM era Orde Baru dapat naik ke puncak kekuasaan demokratis tanpa proses pertanggungjawaban.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="conclusion-point">
+          <div class="bullet">4</div>
+          <div class="content">
+            <h3>Kasus Munir & Aktivis 1998 Masih Terbuka</h3>
+            <p>Lebih dari 26 tahun berlalu sejak penculikan, dan 21 tahun sejak kematian Munir — keadilan masih belum hadir. 13 orang masih hilang. Dalang pembunuhan Munir bebas.</p>
+          </div>
+        </div>
+        <div class="conclusion-point">
+          <div class="bullet">5</div>
+          <div class="content">
+            <h3>Indonesia Belum "HAM-Friendly"</h3>
+            <p>Fakta menunjukkan bahwa Indonesia belum mengedepankan HAM dalam kegiatan kenegaraan. Pola kriminalisasi aktivis, pembungkaman kritik, dan pengabaian korban masih berlangsung hingga hari ini.</p>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="final-stamp">KEADILAN BELUM HADIR</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number-bg">18</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SLIDE 19 — PENUTUP
+  ══════════════════════════════════════════════════════ -->
+  <section class="slide slide-cover" data-index="18">
+    <div class="label muted">Akhir Presentasi</div>
+    <h1 style="font-size: clamp(28px,3.5vw,50px); margin-bottom:20px;">
+      "Aku bisa tenggelam di lautan<br>
+      Aku bisa diracun di udara<br>
+      Aku bisa terbunuh di trotoar jalan —<br>
+      <span style="color:var(--crimson-light)">Tapi aku tak pernah mati,<br>Tak akan berhenti."</span>
+    </h1>
+    <div class="divider"></div>
+    <p style="color: var(--muted); font-size:15px;">— Efek Rumah Kaca, <em>"Di Udara"</em> — dipersembahkan untuk Munir Said Thalib</p>
+    <p style="margin-top:24px; max-width:600px;">
+      Selama negara tidak mengakui, tidak menginvestigasi, dan tidak menghukum pelaku pelanggaran HAM — selama itu pula Indonesia belum layak menyebut dirinya negara yang menghormati hak asasi manusia.
+    </p>
+    <div style="margin-top:32px; display:flex; gap:12px; flex-wrap:wrap">
+      <div class="pill red">Komnas HAM</div>
+      <div class="pill red">KontraS</div>
+      <div class="pill red">IKOHI</div>
+      <div class="pill gold">Amnesty International</div>
+      <div class="pill gold">Human Rights Watch</div>
+      <div class="pill muted">Aksi Kamisan</div>
+      <div class="pill muted">Tempo.co</div>
+      <div class="pill muted">Kompas.com</div>
+    </div>
+    <div class="cover-meta" style="margin-top:28px">
+      Kelompok PKN93 &nbsp;·&nbsp; <span>Fakultas Filsafat UGM</span> &nbsp;·&nbsp; <span>2026</span>
+    </div>
+    <div class="slide-number-bg">19</div>
+  </section>
+
+</div>
+
+<!-- NAV -->
+<div id="nav">
+  <button id="btn-prev" title="Previous (←)">&#8592;</button>
+  <span id="slide-counter">1 / 19</span>
+  <button id="btn-next" title="Next (→)">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slide-counter');
+  const progressBar = document.getElementById('progress-bar');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  let current = 0;
+  const total = slides.length;
+
+  function goTo(n, dir = 1) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    const old = current;
+    current = Math.max(0, Math.min(total - 1, n));
+    setTimeout(() => slides[old].classList.remove('exit'), 600);
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${total}`;
+    progressBar.style.width = `${((current + 1) / total) * 100}%`;
+    btnPrev.classList.toggle('disabled', current === 0);
+    btnNext.classList.toggle('disabled', current === total - 1);
+  }
+
+  btnNext.addEventListener('click', () => goTo(current + 1, 1));
+  btnPrev.addEventListener('click', () => goTo(current - 1, -1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1, 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1, -1);
+  });
+
+  // Touch swipe
+  let touchX = 0;
+  document.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) dx < 0 ? goTo(current + 1, 1) : goTo(current - 1, -1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
